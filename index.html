@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Next Word Predictor</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Next Word Predictor">
+  <meta name="author" content="SJ Evans">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Next Word Predictor</h1>
+    <h2></h2>
+    <p>SJ Evans<br/></p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Introduction</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>This presentation explains my approach to complete the Data Science Capstone assingment to generate a &#39;Next Word Predictor&#39; that accepts an ngram or phrase and predicts the next word. </p>
+
+<p>The project leveraged datasets from Swifkey containing sample text from blogs, news sources and twitter feeds to train the algorithms. The original training data can be found at:</p>
+
+<p><a href="https://d396qusza40orc.cloudfront.net/dsscapstone/dataset/Coursera-SwiftKey.zip">https://d396qusza40orc.cloudfront.net/dsscapstone/dataset/Coursera-SwiftKey.zip</a></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>General Strategy</h2>
+  </hgroup>
+  <article data-timings="">
+    <ol>
+<li>Identify most frequent words that represent at least 90% of word usage.</li>
+<li>Build a list of words that follow the most frequent words.</li>
+<li>Build a correlation matrix of words that are associated in the training text.</li>
+<li>Create an algorithm that uses that uses the last word in an ngram to create a list of possible words and the other words in the ngram to choose the best one.</li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Detailed Strategy - Building Tables</h2>
+  </hgroup>
+  <article data-timings="">
+    <ol>
+<li>Sampled 10% of blogs, news and twitter feeds.</li>
+<li>Used NLP (tm package) to create corpus -&gt; document term matrix -&gt; word correlation matrix with correlation coeffecient for each word pair.</li>
+<li>Also created list of words that followed each of the most frequent words and the percentage of time that each word was the next word to get a probablity table with most frequent words as columns and next words as rows.</li>
+<li>Saved tables as inputs for the word predicting algorithm.</li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Detailed Strategy - Next Word Algorithm</h2>
+  </hgroup>
+  <article data-timings="">
+    <ol>
+<li>Create function that accepts a string (ngram) is input and strips stopwords, white space, numbers and punctuation using the tm package.</li>
+<li>Use the last word in the ngram to subset the table of possible nextwords and capture the probabity of each nextword</li>
+<li>Use all words in the ngram to subset the word correlation matrix and find the average correlations between all input words and each words from the subset next word table.</li>
+<li>Multiply the probability of each word being the next word by the average correlation coefficients for that word with the input words and find the maximum value.</li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>Shiny App</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>The shiny app works by:</p>
+
+<ol>
+<li>Loading the word correlation and next word tables into the background</li>
+<li>Accepting a text string and plugging it into the algorithm function</li>
+<li>Finding the word with the maximum probablilty based on the algorithm and returns that word.</li>
+</ol>
+
+<p>*The algorithm will not return any word until the input string has at least one word that matches the most frequent word list, which contains 5,215 words that represent at least 90% of all word usage in the originally sampled data.</p>
+
+<p>The app can be found at:</p>
+
+<p><a href="https://sjevans242.shinyapps.io/NextWordPredictor/">https://sjevans242.shinyapps.io/NextWordPredictor/</a></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Introduction'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='General Strategy'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Detailed Strategy - Building Tables'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Detailed Strategy - Next Word Algorithm'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Shiny App'>
+         5
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
